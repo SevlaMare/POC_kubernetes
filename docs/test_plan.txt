@@ -1,0 +1,12 @@
+  # unit tests
+# a simple png file can be uploaded.
+# I can see check the status of the upload before/during/after
+# The API handle paralel requests files without locking the server
+# the upload handle big files without crashing the memory
+# handle network pack loss (checksum)
+
+  # end to end
+# 1 A user can send a image
+# 2 The API should save the image
+# 3 I can consult the job resizing the image to generate the thumb.
+# 4 list all job ids, detail file names and file ids.

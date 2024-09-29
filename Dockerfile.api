@@ -1,0 +1,17 @@
+FROM python:3.12.6-slim
+
+# virtual env
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+ENV PYTHONDONTWRITEBYTECODE=1
+# ENV PYTHONUNBUFFERED=1
+
+WORKDIR /api
+COPY ./src /api/
+
+EXPOSE 3000
+CMD [ "python", "main.py"]

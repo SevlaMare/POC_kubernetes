@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+        - name: worker
+          image: docker.io/library/resize_worker:2.0.0
+          env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: REDIS_HOST
+              value: "redis.api-ns.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+          volumeMounts:
+            - name: uploads
+              mountPath: /uploads
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: uploads-claim

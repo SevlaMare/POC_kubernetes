@@ -1,0 +1,78 @@
+services:
+  api:
+    image: "thumbify_api:2.0.0"
+    container_name: api
+    depends_on:
+      - redis
+      # - bucket
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    restart: unless-stopped
+    ports:
+      - "${API_HOST_PORT}:${API_PORT}"
+    env_file: .env
+    networks:
+     - apinet
+    volumes:
+      - uploads:/uploads
+
+  worker:
+    image: "resize_worker:2.0.0"
+    container_name: worker
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - api
+      # - bucket
+    env_file: .env
+    networks:
+      - apinet
+    volumes:
+      - uploads:/uploads
+
+  redis:
+    image: redis:7.4.0
+    container_name: redis
+    restart: unless-stopped
+    command: redis-server --requirepass secret
+    ports:
+      - 6379:6379
+    volumes:
+      - ./vol_data/redis:/data
+    networks:
+     - apinet
+
+  # bucket:
+  #   image: minio/minio:RELEASE.2024-09-09T16-59-28Z
+  #   container_name: bucket
+  #   restart: unless-stopped
+  #   ports:
+  #     - 9000:9000
+  #     - 9001:9001
+  #   volumes:
+  #     - ./vol_data/bucket:/data
+  #   environment:
+  #     - "MINIO_ROOT_USER=s3user"
+  #     - "MINIO_ROOT_PASSWORD=s3password"
+  #     - MINIO_SERVER_URL=http://bucket:9000
+  #   command: server /data --console-address :9001
+  #   networks:
+  #    - apinet
+
+# shared resources
+networks:
+  apinet:
+
+volumes:
+  uploads:
+
+# docker compose -p thumbify -f "compose.api.yaml" up -d --build
+# docker-compose logs -f
+# docker compose -p thumbify -f "compose.api.yaml" down
+
+# shell for redis:
+# docker compose -f "compose.api.yaml" exec redis redis-cli -h redis -a secret -n 0

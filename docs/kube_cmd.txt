@@ -1,0 +1,46 @@
+curl.exe -LO "https://dl.k8s.io/release/v1.28.9/bin/windows/amd64/kubectl.exe"
+    docker C:\Program Files\Docker\Docker\resources\bin
+
+kubectl version # 1.28.9
+kind create cluster --image kindest/node:v1.28.9
+
+# build images and test
+docker compose -p thumbify -f "compose.api.yaml" up -d --build
+docker compose -p thumbify -f "compose.api.yaml" down
+      or
+docker build -t thumbify_api:2.0.0 -f Dockerfile.api .
+docker build -t resize_worker:2.0.0 -f Dockerfile.worker .
+docker pull redis:7.4.0
+
+# envs
+kubectl create namespace api-ns
+kubectl config set-context --current --namespace=api-ns
+
+kubectl apply -f .\1setup.yml
+kubectl get secrets apisecrets -o yaml
+kubectl get configmaps api-config -o yaml
+
+kind load docker-image thumbify_api:2.0.0
+kind load docker-image resize_worker:2.0.0
+kind load docker-image redis:7.4.0
+kind load docker-image minio/minio:RELEASE.2024-09-09T16-59-28Z
+        kubectl get nodes
+    docker exec -ti kind-control-plane bash
+    crictl images # copy name/version
+
+
+kubectl apply -f ./api.yml
+kubectl get pods
+kubectl get svc
+    kubectl delete -f api.yml
+
+
+kubectl port-forward <pod_name> 3000:3000
+    curl http://localhost:3000/details
+
+
+kubectl get pod <pod_name> -o yaml
+kubectl logs -f <pod_name>
+
+log error within ns
+kubectl describe pod api-deploy-f785849d-8bhb6 -n api-ns

@@ -1,0 +1,27 @@
+# stage 1
+FROM python:3.12.6-slim AS builder
+RUN apt-get update && apt-get install -y libpq-dev gcc
+
+# virtual env to get deps
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+COPY /worker/requirements.txt .
+RUN pip install -r requirements.txt
+
+# stage 2
+FROM python:3.12.6-slim
+RUN apt-get update && apt-get install -y libpq-dev && \
+  rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /opt/venv /opt/venv
+
+ENV PYTHONDONTWRITEBYTECODE=1
+# ENV PYTHONUNBUFFERED=1
+ENV PATH="/opt/venv/bin:$PATH"
+
+WORKDIR /src
+COPY worker /src/
+
+EXPOSE 3000
+CMD [ "python", "main.py"]

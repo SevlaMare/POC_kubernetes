@@ -30,7 +30,7 @@
 - Since image processing can be particularly time-consuming, a queue system will be used to avoid deadlocks. The chosen solution is to use Redis to keep the queue in memory and manage it with a FIFO approach to process jobs using background processes. Redis is free to use, open source, and licensed under the RSAL.
 
 ### 2.3 Upload
-- To store the images initially a bucket with the same API as AWS S3 would be used, called MinIO, due it complexity do be deployed on kubenertes, at moment a simple filesystem upload will be used, the application is ready to be used with it as soon as the confirations are solved.
+- To store the images initially a bucket with the same API as AWS S3 would be used, called MinIO, due it complexity to be deployed on kubenertes, at moment a simple file system upload will be used, the application is ready to be used with it as soon as the configurations are solved.
 
 ### 2.4 Future Optimizations
 - To deal with large images, specific libraries that relies on GPU hardware can be used which would required way less time to process, to keep the memory footprint low while handling the large images, also would be necessary some customization to process it in steps rather than loading all the image as most solutions do out of the box.
@@ -42,7 +42,7 @@
 - Adjust the volumes to use what is available on-premises (example NFS) instead of local storage, redis need a stateful set.
 -For small workloads, a single node multi drive must be enough, define the persistent volumes and tweak the resources settings.
 - For high data workloads, a scalable object storage solution is necessary, which can be achieved using AWS S3 or an alternative in terms of features and easy to use would be MinIO, allowing the storages to scale through Kubernetes.
--For high throughput of parallel requests, replace Redis with Kafka, due to its built-in concurrency controls.
+- For high throughput of parallel requests, replace Redis with Kafka, due to its built-in concurrency controls.
 - Address security protocols, such as compliance and regulatory requirements, demanded by the use case (e.g. encrypt data).
 - Implement server routines, like backup and recovery procedures.
 
@@ -68,7 +68,7 @@ with compose up, is also possible to do manual testing at:
 http://localhost/docs
 ```
 
-after the performing the tests, to remove the build:
+after performing the tests, to remove the build:
 ```
 docker compose -p thumbify -f "compose.api.yaml" down
 ```
@@ -126,7 +126,8 @@ http://localhost/docs
 ```
 
 # 7 Usage
-- Upload a image file, you will get a id to check the job progress
+- With the server running go to http://<host>/docs
+- Upload an image file, you will get a id to check the job progress
 - Using the previous response job_id, check the job status
 - Retrieve the thumbnail using the original filename prefixed with "thumb_"
 

@@ -126,7 +126,7 @@ http://localhost/docs
 ```
 
 # 7 Usage
-- With the server running go to http://host/docs
+- With the server running go to http://localhost/docs
 - Upload an image file, you will get a id to check the job progress
 - Using the previous response job_id, check the job status
 - Retrieve the thumbnail using the original filename prefixed with "thumb_"

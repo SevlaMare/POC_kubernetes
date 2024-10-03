@@ -39,8 +39,8 @@
 - If the system is primarily receiving large files, then using a queue for the upload could be necessary to prevent the system from running out of memory. Currently, the system uses a chunk-based approach that loads 1 MB at a time, so roughly estimating, it can handle around 1000 simultaneous large file uploads for every 1 GB of free memory on the server.
 
 # 3 To go into production
-- Adjust the volumes to use what is available on-premises (example NFS) instead of local storage, redis need a stateful set.
--For small workloads, a single node multi drive must be enough, define the persistent volumes and tweak the resources settings.
+- Adjust the volumes to use what is available on-premises, example NFS instead of local storage, redis need a stateful set.
+- For small workloads, a single node multi drive must be enough, define the persistent volumes and tweak the resources settings.
 - For high data workloads, a scalable object storage solution is necessary, which can be achieved using AWS S3 or an alternative in terms of features and easy to use would be MinIO, allowing the storages to scale through Kubernetes.
 - For high throughput of parallel requests, replace Redis with Kafka, due to its built-in concurrency controls.
 - Address security protocols, such as compliance and regulatory requirements, demanded by the use case (e.g. encrypt data).
@@ -126,7 +126,7 @@ http://localhost/docs
 ```
 
 # 7 Usage
-- With the server running go to http://<host>/docs
+- With the server running go to http://host/docs
 - Upload an image file, you will get a id to check the job progress
 - Using the previous response job_id, check the job status
 - Retrieve the thumbnail using the original filename prefixed with "thumb_"
